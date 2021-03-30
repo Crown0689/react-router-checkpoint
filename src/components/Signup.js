@@ -14,7 +14,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { userSignup } from '../actions/auth.actions'
 
-export class Signup extends Component {
+class Signup extends Component {
   state = {
     isValid: true,
     passwordClasses: 'form-control',
@@ -26,7 +26,7 @@ export class Signup extends Component {
     password: '',
     verify_password: ''
   }
-  userSignup = e => {
+  userSignup = async (e) => {
     e.preventDefault()
     let { name, email, company, phone, password, verify_password, address } = this.state
     if (!password || password !== verify_password || !verify_password) {
@@ -37,7 +37,8 @@ export class Signup extends Component {
     } else {
       let newUser = {name, email, company, phone, password, address}
       console.log('newUser', newUser)
-      this.props.userSignup(newUser)
+      console.log(this.props)
+      this.props.userSignup(newUser, this.props.history)
     }
   }
 

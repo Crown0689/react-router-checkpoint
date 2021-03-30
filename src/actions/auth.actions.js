@@ -1,3 +1,4 @@
+
 export const USER_LOGIN_PENDING = 'USER_LOGIN_PENDING'
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS'
 export const USER_LOGIN_FAILED = 'USER_LOGIN_FAILED'
@@ -10,7 +11,8 @@ export const USER_LOGOUT = 'USER_LOGOUT'
 
 const BASE_URL = 'http://localhost:8082'
 
-export const userLogin = ({email, password}) => {
+
+export const userLogin = ({email, password}, history) => {
   return async (dispatch) => {
     try {
       dispatch({type: USER_LOGIN_PENDING})
@@ -24,6 +26,7 @@ export const userLogin = ({email, password}) => {
         type: USER_LOGIN_SUCCESS,
         payload: userObject
       })
+      history.push("/profile")
     } catch(err) {
       dispatch({
         type: USER_LOGIN_FAILED,
@@ -33,7 +36,7 @@ export const userLogin = ({email, password}) => {
   }
 };
 
-export const userSignup = (newUser) => {
+export const userSignup = (newUser, history) => {
   return async (dispatch) => {
     try {
       dispatch({type: USER_LOGIN_PENDING})
@@ -47,6 +50,7 @@ export const userSignup = (newUser) => {
         type: USER_SIGNUP_SUCCESS,
         payload: isSignedUp
       })
+      history("/login")
     } catch(err) {
       dispatch({
         type: USER_SIGNUP_FAILED,

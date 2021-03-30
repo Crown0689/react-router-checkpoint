@@ -1,5 +1,5 @@
 import React from 'react'
-
+import {Link, Route, Switch} from "react-router-dom";
 import {
   Collapse,
   Navbar,
@@ -18,6 +18,12 @@ export default class Example extends React.Component {
       isOpen: !this.state.isOpen
     });
   }
+
+  goToLogin = () => {
+    console.log("history of Nav: " , this.props)
+    this.props.history.push("/login")
+  }
+
   render() {
     return (
       <div>
@@ -25,14 +31,25 @@ export default class Example extends React.Component {
           <NavbarBrand href="/">ProfileHub</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav className="ml-auto" navbar>
-              <NavItem>
-                <a href="#" className="nav-link">Login</a>
-              </NavItem>
-              <NavItem>
-                <a href="#" className="nav-link">Signup</a>
-              </NavItem>
-            </Nav>
+          <Switch>
+                <Route path ="/profile">
+                  <Nav className="ml-auto" navbar>
+                    <NavItem>
+                    <Link to="/login" className="nav-link">Logout</Link>
+                    </NavItem>
+                  </Nav>
+                </Route>
+                <Route>
+                  <Nav className="ml-auto" navbar>
+                    <NavItem>
+                    <Link to="/login" className="nav-link">Login</Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="/signup" className="nav-link">Signup</Link>
+                  </NavItem>
+                  </Nav>
+                </Route>
+              </Switch>
           </Collapse>
         </Navbar>
       </div>
