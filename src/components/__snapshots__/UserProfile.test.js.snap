@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserProfile renders consistently 1`] = `
+<div>
+  <div
+    className="container"
+  >
+    <div
+      className="row"
+    >
+      <div
+        className="col col-sm-6 offset-sm-3"
+      >
+        <h1
+          className="text-center"
+        >
+          User Profile Page
+        </h1>
+      </div>
+    </div>
+    <div
+      className="row"
+      style={
+        Object {
+          "marginTop": 20,
+        }
+      }
+    >
+      <div
+        className="col"
+      >
+        <img
+          alt="profile"
+          src="http://via.placeholder.com/350x450"
+        />
+      </div>
+      <div
+        className="col"
+      >
+        <h3>
+          Name: 
+          dominik
+        </h3>
+        <h3>
+          Email: 
+          test@mail.de
+        </h3>
+        <h3>
+          Company: 
+          volkswagen
+        </h3>
+        <h3>
+          Phone: 
+          123454
+        </h3>
+        <h3>
+          Address: 
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
+`;

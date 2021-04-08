@@ -22,7 +22,7 @@ class Login extends Component {
   }
 
   userLogin = (e) => {
-    e.preventDefault()
+    /* e.preventDefault()  */
     this.props.userLogin(this.state, this.props.history)
   }
 
@@ -80,7 +80,7 @@ class Login extends Component {
 
 function mapStateToProps(state) {
   return {
-    showLoginError: state.auth.showLoginError
+    showLoginError: state.showLoginError
   }
 }
 
