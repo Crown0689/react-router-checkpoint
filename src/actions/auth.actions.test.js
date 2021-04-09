@@ -1,8 +1,7 @@
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import fetchMock from 'fetch-mock'
-import { userLogin } from './auth.actions'
-import {userSignup} from './auth.actions'
+import { userSignup, userLogin, userLogout } from './auth.actions'
 
 
 
@@ -13,110 +12,96 @@ const email = 'dominik.krone@test.de';
 const password = 'test';
 
 
-describe('auth.actions for login and Signup', () => {
+describe('auth.actions for login, Signup and Logout', () => {
     afterEach(() => {
         fetchMock.restore();
-        store=mockStore()
-    })
+        store = mockStore();
+    });
 
-    let store = mockStore()
+    let store = mockStore();
 
     const passUser = {
         email: email,
         password: password,
-    }
+    };
+
+    const fetchError = new Error("Failed Request");
 
     it('creates USER_LOGIN_SUCCESS when trying to login to /api/login', async () => {
-        fetchMock.post('http://localhost:8082/api/login', passUser)
+        fetchMock.post('http://localhost:8082/api/login', passUser);
 
-        const response = await fetch('http://localhost:8082/api/login', {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ passUser})
-        }
-        )
-        const payload = await (response.json());
         const expectedActions = [
             { type: 'USER_LOGIN_PENDING' },
-            { type: 'USER_LOGIN_SUCCESS', payload }
-        ]
-
-        
+            { type: 'USER_LOGIN_SUCCESS', payload: passUser }
+        ];
 
         return store.dispatch(userLogin({ email, password }))
             .then(() => {
                 expect(store.getActions()).toEqual(expectedActions)
-            })
-    })
+            });
+    });
 
     it('creates USER_LOGIN_FAILED, receiving an error from the API', async () => {
-        const failUser = {
-            email: email, 
-            password: 1234,
-        }
-        fetchMock.mock('http://localhost:8082/api/login', new Error('Test') )
-        const response = await fetch('http://localhost:8082/api/login', {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ passUser})
-        })
-        const payload = await (response.json());
-      
+
+        fetchMock.mock('http://localhost:8082/api/login', () => {
+            throw fetchError;
+        });
+
         const expectedAction = [
-            { type: 'USER_LOGIN_FAILED', payload }
-        ]
-        
-        return store.dispatch(userLogin({failUser})).
-        then(()=> {
+            { type: 'USER_LOGIN_PENDING' },
+            { type: 'USER_LOGIN_FAILED', payload: fetchError }
+        ];
+
+        return store.dispatch(userLogin({})).
+            then(() => {
                 expect(store.getActions()).toEqual(expectedAction)
-            })
-        
+            });
+
     })
 
 
     it('creates USER_SIGNUP_SUCCESS when trying to signup to /api/login', async () => {
         fetchMock.post('http://localhost:8082/api/users', passUser)
-        
 
-
-        const response = await fetch('http://localhost:8082/api/users', {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ passUser})
-        }
-        )
-        const payload = await (response.json());
         const expectedActions = [
             { type: 'USER_SIGNUP_PENDING' },
-            { type: 'USER_SIGNUP_SUCCESS', payload }
-        ]
+            { type: 'USER_SIGNUP_SUCCESS', payload: passUser },
+        ];
 
-        
-
-        return store.dispatch(userSignup({ email, password }))
+        return store.dispatch(userSignup({ passUser }))
             .then(() => {
                 expect(store.getActions()).toEqual(expectedActions)
-            })
+            });
     })
 
+
     it('creates USER_SIGNUP_FAILED, receiving an error from the API', async () => {
-        
-        fetchMock.mock('http://localhost:8082/api/users', new Error('Test') )
-        const response = await fetch('http://localhost:8082/api/users', {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ passUser})
-        })
-        const payload = await (response.json());
-      
+
+        fetchMock.mock('http://localhost:8082/api/users', () => {
+            throw fetchError;
+        });
+
         const expectedAction = [
-            { type: 'USER_LOGIN_FAILED', payload }
-        ]
-        
-        return store.dispatch(userSignup({passUser})).
-        then(()=> {
+            { type: 'USER_SIGNUP_PENDING' },
+            { type: 'USER_SIGNUP_FAILED', payload: fetchError },
+        ];
+
+        return store.dispatch(userSignup({ passUser }))
+            .then(() => {
                 expect(store.getActions()).toEqual(expectedAction)
+            });
+    })
+
+    it('creates USER_LOGOUT on using Logout function', async () => {
+        const expectedAction = [
+            { type: 'USER_LOGOUT' },
+        ];
+
+        return store.dispatch(userLogout())
+            .then(() => {
+                expect(store.getActions()).toEqual(expectedAction);
+
             })
-        
     })
 })
+
